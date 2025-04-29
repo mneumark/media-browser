@@ -1,3 +1,5 @@
+import { SORT_FIELD, SortOption } from "@/components/SortMenu"
+
 const media = [
   { title: 'A Bug\'s Life', id: 9487, date: '1998-11-20' },
   { title: 'The Adventures of Ichabod and Mr. Toad', id: 13465, date: '1949-10-05' },
@@ -15,7 +17,7 @@ const media = [
   { title: 'Fantasia', id: 756, date: '1940-11-13' },
   { title: 'Finding Nemo', id: 12, date: '2003-05-30' },
   { title: 'The Fox and the Hound', id: 10948, date: '1981-07-10' },
-  { title: 'The Great Mouse Detective', id: 10991, date: '1986-07-02' },
+  { title: 'The Great Mouse Detective', id: 9994, date: '1986-07-02' },
   { title: 'The Hunchback of Notre Dame', id: 10545, date: '1996-06-21' },
   { title: 'The Incredibles', id: 9806, date: '2004-11-05' },
   { title: 'The Jungle Book', id: 9325, date: '1967-10-18' },
@@ -27,11 +29,11 @@ const media = [
   { title: 'Monsters, Inc.', id: 585, date: '2001-11-02' },
   { title: 'Peter Pan', id: 10693, date: '1953-02-05' },
   { title: 'Pinocchio', id: 10895, date: '1940-02-07' },
-  { title: 'The Princess and the Frog', id: 32657, date: '2009-12-11' },
+  { title: 'The Princess and the Frog', id: 10198, date: '2009-12-11' },
   { title: 'Ratatouille', id: 2062, date: '2007-06-29' },
-  { title: 'The Reluctant Dragon', id: 10995, date: '1941-06-20' },
-  { title: 'The Rescuers', id: 10990, date: '1977-06-22' },
-  { title: 'The Rescuers Down Under', id: 12180, date: '1990-11-16' },
+  { title: 'The Reluctant Dragon', id: 22752, date: '1941-06-20' },
+  { title: 'The Rescuers', id: 11319, date: '1977-06-22' },
+  { title: 'The Rescuers Down Under', id: 11135, date: '1990-11-16' },
   { title: 'Sleeping Beauty', id: 10882, date: '1959-01-29' },
   { title: 'Snow White and the Seven Dwarfs', id: 408, date: '1937-12-21' },
   { title: 'The Sword in the Stone', id: 9078, date: '1963-12-25' },
@@ -57,11 +59,35 @@ const media = [
   // { title: 'WALL-E', id: 10681, date: '2008-06-27' }
   ]
 
-export default function(filter: string, start: number, end: number): MediaBase[] {
-  return media.filter(item => item.title.toLowerCase().includes((filter || '').toLowerCase()))
-  .slice(start, end)
+function sortMedia(media: MediaBase[], field: keyof Pick<MediaBase, 'date' | 'title'>, direction: 'asc' | 'desc') {
+  return media.sort((a, b) => {
+    const aValue = field ==='title' ? a[field].replace(/^(?:The|A)\s+/i, '').toLowerCase() : a[field]
+    const bValue = field ==='title' ? b[field].replace(/^(?:The|A)\s+/i, '').toLowerCase() : b[field]
+    if (direction === 'asc') {
+      return aValue.localeCompare(bValue)
+    }
+    return bValue.localeCompare(aValue)
+  })
 }
 
-export function mediaCount() {
-  return media.length
+export default function({
+  filter, 
+  start, 
+  end,
+  sortField,
+  sortDirection,
+}: {
+  filter: string, 
+  start: number, 
+  end: number,
+  sortField: keyof Pick<MediaBase, 'date' | 'title'>,
+  sortDirection: 'asc' | 'desc'
+}): MediaBase[] {
+  const filtered = media.filter(item => item.title.toLowerCase().includes((filter || '').toLowerCase()))
+
+  return sortMedia(filtered, sortField, sortDirection).slice(start, end)
+}
+
+export function mediaCount(filter: string = '') {
+  return media.filter(item => item.title.toLowerCase().includes((filter || '').toLowerCase())).length
 }

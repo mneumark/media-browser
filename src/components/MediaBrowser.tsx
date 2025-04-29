@@ -19,61 +19,66 @@ export function MediaBrowser() {
   const [filter, setFilter] = useState<string>('')
   const [start, setStart] = useState<number>(0)
   const [loading, setLoading] = useState<boolean>(false)
-  const [media, setMedia] = useState<MediaWithData[]>([])
+  const [media, setMedia] = useState<MediaBase[]>([])
 
   const [infiniteRef] = useInfiniteScroll({
     loading,
-    hasNextPage: mediaCount() > media.length,
+    hasNextPage: mediaCount(filter) > media.length,
     onLoadMore: getMoreMedia,
     disabled: false,
   })
 
-  function getMoreMedia() {
+  function reset() {
+    setMedia([])
+    setStart(0)
+    setLoading(false)
+  }
+
+  function sort(sortOpt: SortOption) {
+    setSortBy(sortOpt)
+    reset()
+  }
+
+  function filterMedia(filter: string) {
+    setFilter(filter)
+    reset()
+  }
+
+  function getMoreMedia(sortOpt?: SortOption) {
     setLoading(true)
-    const newMedia = rawMedia(filter, start, start + PAGE_SIZE).map(item => ({
-      mediaPoster: <MediaPosterWithFetch id={item.id} key={item.id} />,
-      media: item,
-    }))
+    const { field, direction } = SORT_FIELD[sortOpt || sortBy]
+    const newMedia = rawMedia({
+      filter, 
+      start, 
+      end: start + PAGE_SIZE,
+      sortField: field,
+      sortDirection: direction,
+    })
     setMedia((prev) => [...prev, ...newMedia])
     setStart(start + PAGE_SIZE)
     setTimeout(() => {
       setLoading(false)
-    }, 500)
+    }, 1000)
   }
-  
-  useEffect(() => {
-    if (!media) getMoreMedia()
-  }, [])
 
   const { field, direction } = SORT_FIELD[sortBy || SortOption.NAME_ASC]
-  const sortedMedia = media.sort((a, b) => {
-    const aValue = field ==='title' ? a.media[field].replace(/^(?:The|A)\s+/i, '').toLowerCase() : a.media[field]
-    const bValue = field ==='title' ? b.media[field].replace(/^(?:The|A)\s+/i, '').toLowerCase() : b.media[field]
-    if (direction === 'asc') {
-      return aValue.localeCompare(bValue)
-    }
-    return bValue.localeCompare(aValue)
-  }).map((item) => item.mediaPoster)
 
   return (
     <div>
       <div className="flex justify-between mx-4 mt-4 items-center">
-          <FilterBox setFilter={setFilter} filter={filter} />
-          <SortMenu sortBy={sortBy} setSortBy={setSortBy} />
+          <FilterBox setFilter={filterMedia} filter={filter} />
+          <SortMenu sortBy={sortBy} setSortBy={sort} />
       </div>
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4"> */}
       <div
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4"
       >
-        {sortedMedia}
+        {media.map(item => item?.id && <MediaPosterWithFetch id={item.id} key={item.id} />)}
       </div>
-      {mediaCount() > media.length && (
+      {mediaCount(filter) > media.length && (
         <div ref={infiniteRef} className="col-span-full flex justify-center items-center">
           Loading...
         </div>
       )}
-
-      {/* </div> */}
     </div>
   )
 }
