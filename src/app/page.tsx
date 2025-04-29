@@ -1,4 +1,4 @@
-import { MediaBrowser } from "@/components/MediaBrowser";
+import { MediaBrowser } from '@/components/MediaBrowser'
 
 export default function Home() {
   return (

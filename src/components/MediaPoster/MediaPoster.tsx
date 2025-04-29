@@ -16,7 +16,7 @@ export function MediaPoster({
 
   return (
     <Link 
-      className="flex flex-col items-center justify-center p-4 bg-gray-800 text-white rounded-lg shadow-lg"
+      className="flex flex-col items-center justify-center p-4 text-white shadow-lg"
       href={`/detail/${media.id}`}
     >
       <Image

@@ -7,8 +7,7 @@ const POSTER_WIDTH = 200
 const POSTER_HEIGHT = 300
 
 export async function getMovieData(id: number): Promise<Media> {
-  const url = `${TMDB_API_URL}/3/movie/${id}`;
-  
+  const url = `${TMDB_API_URL}/3/movie/${id}`
   const data = fetch(url, {
     headers: {
       Authorization: `Bearer ${TMDB_READ_ACCESS_TOKEN}`,

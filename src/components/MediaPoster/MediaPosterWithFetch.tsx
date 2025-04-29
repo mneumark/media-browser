@@ -4,10 +4,11 @@ import { Suspense, use, useEffect, useState } from 'react'
 import { MediaPoster } from './MediaPoster'
 import { getMovieData } from '@/lib/api'
 
-export default function MediaPosterWithFetch({ id }: { id: number }) {
+export function MediaPosterWithFetch({ id }: { id: number }) {
   const [media, setMedia] = useState<Media | null>(null)
 
   useEffect(() => {
+    console.log('MediaPosterWithFetch useEffect')
     async function fetchData() {
       const data = await getMovieData(id)
       setMedia(data)

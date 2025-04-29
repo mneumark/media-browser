@@ -1,6 +1,7 @@
 type MediaBase = {
   id: number
   title: string
+  date: string
 }
 
 type Media = MediaBase & {
