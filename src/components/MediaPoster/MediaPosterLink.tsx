@@ -3,12 +3,12 @@
 import { Suspense, use, useEffect, useState } from 'react'
 import { MediaPoster } from './MediaPoster'
 import { getMovieData } from '@/lib/api'
+import Link from 'next/link'
 
 export function MediaPosterWithFetch({ id }: { id: number }) {
   const [media, setMedia] = useState<Media | null>(null)
 
   useEffect(() => {
-    console.log('MediaPosterWithFetch useEffect')
     async function fetchData() {
       const data = await getMovieData(id)
       setMedia(data)
@@ -18,7 +18,11 @@ export function MediaPosterWithFetch({ id }: { id: number }) {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      {media && <MediaPoster media={media} />}
+      {media && (
+        <Link href={`/detail/${media.id}`}>
+          <MediaPoster media={media} />
+        </Link>
+  )}
     </Suspense>
   )
 }

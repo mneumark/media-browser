@@ -7,6 +7,13 @@ export enum SortOption {
   DATE_DESC = 'date.desc',
 }
 
+export const SORT_FIELD: Record<SortOption, {field: keyof Pick<MediaBase, 'title' | 'date'>, direction: 'asc' | 'desc'}> = {
+  [SortOption.NAME_ASC]: { field: 'title', direction: 'asc'},
+  [SortOption.NAME_DESC]: { field: 'title', direction:  'desc'},
+  [SortOption.DATE_ASC]: { field: 'date', direction: 'asc'},
+  [SortOption.DATE_DESC]: { field: 'date', direction:  'desc'},
+}
+
 export function SortMenu({
   sortBy,
   setSortBy,

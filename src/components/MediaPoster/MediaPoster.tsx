@@ -8,25 +8,23 @@ const POSTER_HEIGHT = 300
 
 export function MediaPoster({
   media,
+  hideTitle = false,
 }: {
   media: Media
+  hideTitle?: boolean
 }) {
 
   const { title, imageUrl } = media
 
   return (
-    <Link 
-      className="flex flex-col items-center justify-center p-4 text-white shadow-lg"
-      href={`/detail/${media.id}`}
-    >
+    <div className="flex flex-col items-center justify-center p-4 text-white shadow-lg">
       <Image
         src={imageUrl}
         alt={title}
         width={POSTER_WIDTH}
         height={POSTER_HEIGHT}
-        className=""
       />
-      <h2 className="text-xl font-bold mb-2">{title}</h2>
-    </Link>
+      {!hideTitle && <h2 className="text-xl font-bold mb-2 h-15 overflow-ellipsis flex text-center">{title}</h2>}
+    </div>
   )
 }
