@@ -72,7 +72,7 @@ export function MediaBrowser() {
       <div
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 p-4"
       >
-        {media.map(item => item?.id && <MediaPosterWithFetch id={item.id} key={item.id} />)}
+        {media.map(item => item?.id && <MediaPosterWithFetch item={item} key={item.id} />)}
       </div>
       {mediaCount(filter) > media.length && (
         <div ref={infiniteRef} className="col-span-full flex justify-center items-center">

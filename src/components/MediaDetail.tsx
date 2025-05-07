@@ -19,7 +19,7 @@ export default function MediaDetail({ media }: { media: Media }) {
     <div className="flex flex-col items-center justify-center p-4 text-white shadow-lg">
       <h1 className="text-2xl font-bold mb-4">Media Detail</h1>
       <div className="flex direction-row">
-        <MediaPoster hideTitle media={media} />
+        <MediaPoster imageUrl={media.imageUrl} />
         <div>
           <h2 className="text-xl font-bold mt-4">{media.title}</h2>
           <p className="flex direction-row mb-2">
