@@ -2,19 +2,16 @@
 
 import { useEffect, useState } from 'react'
 import { MediaPoster } from './MediaPoster'
-import { getMovieData } from '@/lib/api'
 import Link from 'next/link'
 
 export function MediaPosterWithFetch({ item }: { item: MediaBase }) {
   const [media, setMedia] = useState<Media | null>(null)
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await getMovieData(id)
-      setMedia(data)
-    }
-    fetchData()
-  }, [id])
+    fetch(`/api/movie/${item.id}`)
+      .then((res) => res.json())
+      .then((data) => setMedia(data))
+  }, [item.id])
 
   return (
     <Link href={`/detail/${media?.id || item.id}`}>
